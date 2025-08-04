@@ -1,4 +1,4 @@
-/* 
+sssssssssssssss/* 
  * Project Galactic_Ecliptic_Equatorial_Extrapolation_and_Positiong_System
  * Author: Benjamin Brown
  * Date: 08022025
@@ -6,30 +6,58 @@
  * https://docs.particle.io/firmware/best-practices/firmware-template/
  */
 
-// Include Particle Device OS APIs
-#include "Particle.h"
 
-// Let Device OS manage the connection to the Particle Cloud
+#include "Particle.h"
+#include "neopixel.h"
+#include "math.h"
+
+const float SAG_A_RA = 266.4;
+const float SAG_A_DEC = 29.0;
+
+unsigned int uni_tc;
+unsigned int green_st;
+unsigned int local_st;
+
+
+unsigned float hour_Ang;
+unsigned float local_Long;
+unsigned float julian_days;
+unsigned float X_Ang;
+unsigned float Y_Ang;
+unsigned float Z_Ang;
+
+
+
+
 SYSTEM_MODE(AUTOMATIC);
 
-// Run the application and system concurrently in separate threads
-SYSTEM_THREAD(ENABLED);
-
-// Show system, cloud connectivity, and application logs over USB
-// View logs with CLI using 'particle serial monitor --follow'
-SerialLogHandler logHandler(LOG_LEVEL_INFO);
-
-// setup() runs once, when the device is first turned on
 void setup() {
-  // Put initialization like pinMode and begin functions here
+  Serial.begin(9600);
+  waitFor.SerialIsConnecteed(10000);
+
+  Wire.begin();
+
 }
 
-// loop() runs over and over again, as quickly as it can execute.
 void loop() {
-  // The core of your code will likely live here.
 
-  // Example: Publish event to cloud every 10 seconds. Uncomment the next 3 lines to try it!
-  // Log.info("Sending Hello World to the cloud!");
-  // Particle.publish("Hello world!");
-  // delay( 10 * 1000 ); // milliseconds and blocking - see docs for more info!
 }
+
+float julianDate_Converter(int year, int month, int day, float uni_T){
+  float JD;
+  const float JD_DAY_CONST=367.0;
+  const float MONTH_SHIFT = 275.0;
+  const float JD_SHIFT_CONST = 1721013.5;
+
+  JD= (JD_DAY_CONST*year)-(7*(year
+  +floor(month+9.0)/12.0)/4.0)
+  +floor((MONTH_SHIFT*month)/9.0)
+  +day
+  +JD_SHIFT_CONST
+  +(uni_T/24.0);
+  
+  
+  //(((7*(year+floor((month+9)/12)))/4)+(floor((MONTH_SHIFT*month)/9))+day+JD_SHIFT_CONST+(uni_T/24));
+  return JD;
+
+ }
